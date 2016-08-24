@@ -2,44 +2,79 @@ import * as React from "react";
 import { 
     Text, 
     View, 
-    StyleSheet
+    StyleSheet,
+    ScrollView,
+    ListView,
+    InteractionManager
 } from "react-native";
 // TODO: convert to ES6 module import syntax
-var Calendar = require('react-native-calendar-android');
+// import Calendar = require('react-native-calendar-android');
+
+import CalendarMonthView, {MonthMap} from './CalendarDayView';
+
 interface SubjectViewProps {
     showPlaceholderForCostlyElements: boolean
 }
 interface SubjectViewState {
+    monthsListDataSource?: React.ListViewDataSource;
+    renderTillIndex: number;
+    foo: boolean;
 }
     
 export default class SubjectView extends React.Component<SubjectViewProps, SubjectViewState> {
+
+    private months:{[monthName: string]: number[]} = {
+        'January': [0],
+        'February': [1],
+        'March': [2],
+        'April': [3],
+        'May': [4],
+        'June': [5]
+    } 
+
+    constructor () {
+        super();
+        const dataSrc = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 !== r2,
+            sectionHeaderHasChanged: (s1, s2) => s1 !== s2
+        });
+        this.state = {
+            monthsListDataSource: dataSrc.cloneWithRowsAndSections(this.months),
+            renderTillIndex: 0,
+            foo: false            
+        };
+    }
+
+    componentDidMount () {
+        const handlerId = setInterval(() => {
+            this.setState({renderTillIndex: this.state.renderTillIndex + 1, foo: true});
+            if (this.state.renderTillIndex >= 6)
+                clearInterval(handlerId);            
+        }, 300);
+        
+    }
+
     render () {
         return (
             <View
                 style={stylesheet['subject-view-container']}
             >
-                <Text>Compiler Teri Ma ki bosdi ke</Text>
+                <ScrollView>
                 {
-                    this.props.showPlaceholderForCostlyElements ? (
+                    [1,2,3,4,5,6].slice(0, this.state.renderTillIndex).map(month => 
                         <View>
+                            <Text style={{fontWeight:'800', textAlign: 'center', lineHeight: 30}} >{Object.keys(this.months)[month-1]}</Text>
+                            <CalendarMonthView
+                                month={month}
+                                year={2016}
+                            />
                         </View>
-                    ) : (
-                        <Calendar
-                            width={270}
-                            topbarVisible={true}
-                            arrowColor="#dafacd"
-                            firstDayOfWeek="monday"
-                            showDate="all"
-                            currentDate={[ "2016/12/01" ]}
-                            selectionMode="multiple"
-                            selectionColor="#dadafc"
-                            selectedDates={[ "2015/11/20", "2015/11/30", 1448745712382 ]}
-                            onDateChange={(data) => {
-                                console.log(data);
-                            }} 
-                        />
-                    ) 
+                    )
                 }
+                </ScrollView>
+
+                <Text>ha</Text>
+                
             </View>
         )
     }
@@ -48,6 +83,6 @@ const stylesheet = StyleSheet.create({
     "subject-view-container": {
         flex: 1,
         backgroundColor: "white",
-        alignItems: "center"
+        alignItems: "stretch"
     }
 });

@@ -11,10 +11,18 @@ import {
     InteractionManager 
 } from "react-native";
 import ScrollableTabView from "react-native-scrollable-tab-view";
+
 import DayView from './DayView';
 import SubjectView from './SubjectView';
 import WeekView from './WeekView';
-var Calendar = require('react-native-calendar-android');
+// var Calendar = require('react-native-calendar-android');
+
+import CalendarMonthView from './CalendarDayView';
+
+
+
+
+
 export class App extends React.Component<any, any> {
     constructor (props) {
         super(props);
@@ -23,7 +31,7 @@ export class App extends React.Component<any, any> {
         }
     }
     _onPress (navigator: React.NavigatorStatic) {
-        console.log(navigator.getCurrentRoutes())
+        // console.log(navigator.getCurrentRoutes())
         navigator.push(this.routes[1]);
         InteractionManager.runAfterInteractions(() => this.setState({showAll: true}))
     }
@@ -74,7 +82,6 @@ export class App extends React.Component<any, any> {
                 }>
                 <Navigator
                     initialRoute={this.routes[0]}
-                    initialRouteStack={this.routes}
                     configureScene={() => Navigator.SceneConfigs.FloatFromBottomAndroid}
                     style={stylesheet.container}
                     renderScene={(route, navigator) => this.navigatorRenderScene(route, navigator)}
@@ -82,12 +89,20 @@ export class App extends React.Component<any, any> {
                 />
             </DrawerLayoutAndroid>
         );
+
+        // return (
+        //     <View style={stylesheet.container}>
+        //         <Text>July</Text>
+        //         <CalendarMonthView month={7} year={2016} />
+        //     </View>
+        // )
+
     }
 }
     
 const stylesheet = StyleSheet.create({
     "container": {
         flex: 1,
-        // alignItems: "center"
+        alignItems: "stretch"
     }
 });

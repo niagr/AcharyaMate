@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   TouchableNativeFeedback,
+  InteractionManager
 } from 'react-native';
 interface SubjectTileProps extends React.Props<SubjectTile> {
     subjectTitle: string;
@@ -25,6 +26,10 @@ export default class SubjectTile extends React.Component<SubjectTileProps, any> 
         return false;
     }
     
+    _onPress () {
+        InteractionManager.runAfterInteractions(() => this.props.onPress());
+    }
+
     render () {
         return (
             <TouchableNativeFeedback
@@ -33,8 +38,8 @@ export default class SubjectTile extends React.Component<SubjectTileProps, any> 
                         // stylesheet.container, 
                         // this.props.backgroundColor && {backgroundColor: this.props.backgroundColor},
                     ]}
-                    onPress={this.props.onPress}
-                    background={TouchableNativeFeedback.SelectableBackground()}
+                    onPress={this._onPress.bind(this)}
+                    background={TouchableNativeFeedback.Ripple('green', false)}
                     delayPressIn={0}
             >
                 <View 

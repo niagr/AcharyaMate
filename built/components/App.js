@@ -2,7 +2,6 @@ import * as React from "react";
 import { Text, View, StyleSheet, DrawerLayoutAndroid, Navigator, BackAndroid, InteractionManager } from "react-native";
 import SubjectView from './SubjectView';
 import WeekView from './WeekView';
-var Calendar = require('react-native-calendar-android');
 export class App extends React.Component {
     constructor(props) {
         super(props);
@@ -15,7 +14,7 @@ export class App extends React.Component {
         };
     }
     _onPress(navigator) {
-        console.log(navigator.getCurrentRoutes());
+        // console.log(navigator.getCurrentRoutes())
         navigator.push(this.routes[1]);
         InteractionManager.runAfterInteractions(() => this.setState({ showAll: true }));
     }
@@ -39,11 +38,18 @@ export class App extends React.Component {
         }
     }
     render() {
-        return (React.createElement(DrawerLayoutAndroid, {drawerWidth: 300, drawerPosition: DrawerLayoutAndroid.positions.Left, renderNavigationView: () => React.createElement(View, null, React.createElement(Text, null, "Navigation Bitchez!!"))}, React.createElement(Navigator, {initialRoute: this.routes[0], initialRouteStack: this.routes, configureScene: () => Navigator.SceneConfigs.FloatFromBottomAndroid, style: stylesheet.container, renderScene: (route, navigator) => this.navigatorRenderScene(route, navigator)})));
+        return (React.createElement(DrawerLayoutAndroid, {drawerWidth: 300, drawerPosition: DrawerLayoutAndroid.positions.Left, renderNavigationView: () => React.createElement(View, null, React.createElement(Text, null, "Navigation Bitchez!!"))}, React.createElement(Navigator, {initialRoute: this.routes[0], configureScene: () => Navigator.SceneConfigs.FloatFromBottomAndroid, style: stylesheet.container, renderScene: (route, navigator) => this.navigatorRenderScene(route, navigator)})));
+        // return (
+        //     <View style={stylesheet.container}>
+        //         <Text>July</Text>
+        //         <CalendarMonthView month={7} year={2016} />
+        //     </View>
+        // )
     }
 }
 const stylesheet = StyleSheet.create({
     "container": {
         flex: 1,
+        alignItems: "stretch"
     }
 });

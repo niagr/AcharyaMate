@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, TouchableNativeFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableNativeFeedback, InteractionManager } from 'react-native';
 export default class SubjectTile extends React.Component {
     // measureCustomAsync (callback: (x, y, w, h, px, py) => any) {
     //     (this.refs['container'] as any).measureLayout(findNodeHandle(this) , (...args) => {
@@ -12,8 +12,11 @@ export default class SubjectTile extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return false;
     }
+    _onPress() {
+        InteractionManager.runAfterInteractions(() => this.props.onPress());
+    }
     render() {
-        return (React.createElement(TouchableNativeFeedback, {ref: 'container', style: [], onPress: this.props.onPress, background: TouchableNativeFeedback.SelectableBackground(), delayPressIn: 0}, React.createElement(View, {style: [
+        return (React.createElement(TouchableNativeFeedback, {ref: 'container', style: [], onPress: this._onPress.bind(this), background: TouchableNativeFeedback.Ripple('green', false), delayPressIn: 0}, React.createElement(View, {style: [
             stylesheet.container,
             this.props.backgroundColor && { backgroundColor: this.props.backgroundColor }
         ]}, React.createElement(Text, {style: stylesheet.title}, this.props.subjectTitle), React.createElement(Text, {style: stylesheet.professorText}, "Prof. ", this.props.professor))));
