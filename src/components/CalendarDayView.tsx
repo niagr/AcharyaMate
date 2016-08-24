@@ -9,7 +9,7 @@ interface CalendarMonthViewProps extends React.Props<CalendarMonthView> {
     month: number
 }
 interface CalendarMonthViewState {
-}
+} 
 
 type Month = 'January'|'February';
 
