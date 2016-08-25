@@ -11,6 +11,7 @@ import {
 // import Calendar = require('react-native-calendar-android');
 
 import CalendarMonthView, {MonthMap} from './CalendarDayView';
+import StaggeredListView from './StaggeredListView';
 
 interface SubjectViewProps {
     showPlaceholderForCostlyElements: boolean
@@ -18,7 +19,6 @@ interface SubjectViewProps {
 interface SubjectViewState {
     monthsListDataSource?: React.ListViewDataSource;
     renderTillIndex: number;
-    foo: boolean;
 }
     
 export default class SubjectView extends React.Component<SubjectViewProps, SubjectViewState> {
@@ -40,41 +40,73 @@ export default class SubjectView extends React.Component<SubjectViewProps, Subje
         });
         this.state = {
             monthsListDataSource: dataSrc.cloneWithRowsAndSections(this.months),
-            renderTillIndex: 0,
-            foo: false            
+            renderTillIndex: 0
         };
     }
 
     componentDidMount () {
-        const handlerId = setInterval(() => {
-            this.setState({renderTillIndex: this.state.renderTillIndex + 1, foo: true});
-            if (this.state.renderTillIndex >= 6)
-                clearInterval(handlerId);            
-        }, 300);
+        // const handlerId = setInterval(() => {
+        //     this.setState({renderTillIndex: this.state.renderTillIndex + 1});
+        //     if (this.state.renderTillIndex >= 6)
+        //         clearInterval(handlerId);            
+        // }, 100);
+
+        // setTimeout(() => {
+            // this.setState({renderTillIndex: 5})
+        // }, 200);
+
+        // requestAnimationFrame(() => this.setState({renderTillIndex: this.state.renderTillIndex + 1}))
         
+    }
+
+    componentWillReceiveProps (nextProps) {
+        if (this.props.showPlaceholderForCostlyElements && !nextProps.showPlaceholderForCostlyElements) {
+            this.renderContentProgressively();
+        }
+    }
+
+    renderContentProgressively () {
+        const tick = () => {
+            this.setState({renderTillIndex: this.state.renderTillIndex + 1});
+            this.state.renderTillIndex < 6 && requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
     }
 
     render () {
         return (
             <View
-                style={stylesheet['subject-view-container']}
+                style={[stylesheet['subject-view-container']]}
             >
-                <ScrollView>
                 {
-                    [1,2,3,4,5,6].slice(0, this.state.renderTillIndex).map(month => 
-                        <View>
-                            <Text style={{fontWeight:'800', textAlign: 'center', lineHeight: 30}} >{Object.keys(this.months)[month-1]}</Text>
-                            <CalendarMonthView
-                                month={month}
-                                year={2016}
-                            />
-                        </View>
-                    )
+                // <ScrollView>
+                // {this.props.showPlaceholderForCostlyElements ? <Text>Loading</Text> :
+                    // [1,2,3,4,5,6].slice(0, this.state.renderTillIndex).map(month => 
+                    //     <View key={`month${month}`} >
+                    //         <Text style={{fontWeight:'800', textAlign: 'center', lineHeight: 30}} >{Object.keys(this.months)[month-1]}</Text>
+                    //         <CalendarMonthView
+                    //             month={month}
+                    //             year={2016}
+                    //         />
+                    //     </View>
+                    // )
+                // }
+                // </ScrollView>
                 }
-                </ScrollView>
-
-                <Text>ha</Text>
-                
+                {this.props.showPlaceholderForCostlyElements ? <Text>Loading bro</Text> :
+                    <StaggeredListView>
+                        {[1,2,3,4,5,6].map(month => 
+                            <View key={`month${month}`} >
+                                <Text style={{fontWeight:'800', textAlign: 'center', lineHeight: 30}} >{Object.keys(this.months)[month-1]}</Text>
+                                <CalendarMonthView
+                                    month={month}
+                                    year={2016}
+                                />
+                            </View>
+                        )}
+                    </StaggeredListView>
+                }
+            
             </View>
         )
     }

@@ -5,6 +5,7 @@ import WeekView from './WeekView';
 export class App extends React.Component {
     constructor(props) {
         super(props);
+        this.interactionHandle = null;
         this.routes = [
             { title: 'week-view', index: 0 },
             { title: 'subject-view', index: 1, subject: null },
@@ -16,7 +17,8 @@ export class App extends React.Component {
     _onPress(navigator) {
         // console.log(navigator.getCurrentRoutes())
         navigator.push(this.routes[1]);
-        InteractionManager.runAfterInteractions(() => this.setState({ showAll: true }));
+        this.interactionHandle = InteractionManager.createInteractionHandle();
+        // InteractionManager.runAfterInteractions(() => this.setState({showAll: true}))
     }
     navigatorRenderScene(route, navigator) {
         if (!this._navigator) {
@@ -37,8 +39,17 @@ export class App extends React.Component {
                 return (React.createElement(SubjectView, {showPlaceholderForCostlyElements: !this.state.showAll}));
         }
     }
+    onNavigatorDidFocus(route) {
+        switch (route.title) {
+            case 'subject-view': {
+                InteractionManager.clearInteractionHandle(this.interactionHandle);
+                this.setState({ showAll: true });
+                break;
+            }
+        }
+    }
     render() {
-        return (React.createElement(DrawerLayoutAndroid, {drawerWidth: 300, drawerPosition: DrawerLayoutAndroid.positions.Left, renderNavigationView: () => React.createElement(View, null, React.createElement(Text, null, "Navigation Bitchez!!"))}, React.createElement(Navigator, {initialRoute: this.routes[0], configureScene: () => Navigator.SceneConfigs.FloatFromBottomAndroid, style: stylesheet.container, renderScene: (route, navigator) => this.navigatorRenderScene(route, navigator)})));
+        return (React.createElement(DrawerLayoutAndroid, {drawerWidth: 300, drawerPosition: DrawerLayoutAndroid.positions.Left, renderNavigationView: () => React.createElement(View, null, React.createElement(Text, null, "Navigation Bitchez!!"))}, React.createElement(Navigator, {initialRoute: this.routes[0], configureScene: () => Navigator.SceneConfigs.FloatFromBottomAndroid, style: stylesheet.container, renderScene: (route, navigator) => this.navigatorRenderScene(route, navigator), onDidFocus: (r) => this.onNavigatorDidFocus(r)})));
         // return (
         //     <View style={stylesheet.container}>
         //         <Text>July</Text>

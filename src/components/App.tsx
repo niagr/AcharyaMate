@@ -24,6 +24,9 @@ import CalendarMonthView from './CalendarDayView';
 
 
 export class App extends React.Component<any, any> {
+
+    private interactionHandle = null;
+
     constructor (props) {
         super(props);
         this.state = {
@@ -33,7 +36,8 @@ export class App extends React.Component<any, any> {
     _onPress (navigator: React.NavigatorStatic) {
         // console.log(navigator.getCurrentRoutes())
         navigator.push(this.routes[1]);
-        InteractionManager.runAfterInteractions(() => this.setState({showAll: true}))
+        this.interactionHandle = InteractionManager.createInteractionHandle();
+        // InteractionManager.runAfterInteractions(() => this.setState({showAll: true}))
     }
     private _navigator: React.NavigatorStatic;
     
@@ -41,6 +45,7 @@ export class App extends React.Component<any, any> {
         {title: 'week-view', index: 0},
         {title: 'subject-view', index: 1, subject: null},
     ];
+
     navigatorRenderScene (route, navigator: React.NavigatorStatic) {
         if (!this._navigator) {
             this._navigator = navigator;
@@ -69,6 +74,17 @@ export class App extends React.Component<any, any> {
         }
         
     }
+
+    onNavigatorDidFocus (route) {
+        switch (route.title) {
+            case 'subject-view': {
+                InteractionManager.clearInteractionHandle(this.interactionHandle);
+                this.setState({showAll: true});
+                break;
+            }
+        }
+    }
+
     render () {
         
         return (
@@ -85,7 +101,7 @@ export class App extends React.Component<any, any> {
                     configureScene={() => Navigator.SceneConfigs.FloatFromBottomAndroid}
                     style={stylesheet.container}
                     renderScene={(route, navigator) => this.navigatorRenderScene(route, navigator)}
-                    
+                    onDidFocus={(r) => this.onNavigatorDidFocus(r)}
                 />
             </DrawerLayoutAndroid>
         );
