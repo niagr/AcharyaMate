@@ -48,7 +48,7 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'stretch',
-        height: 250
+        height: 250,
     },
     'dayTextContainer': {
         width: 20,

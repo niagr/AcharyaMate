@@ -10,9 +10,6 @@ interface BreakTileProps extends React.Props<BreakTile> {
     text: string;
 }
 export default class BreakTile extends React.Component<BreakTileProps, any> {
-    shouldComponentUpdate (nextProps, nextState) {
-        return false;
-    }
     render () {
         return (
             <View>
