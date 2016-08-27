@@ -15,7 +15,6 @@ import ScrollableTabView from "react-native-scrollable-tab-view";
 import DayView from './DayView';
 import SubjectView from './SubjectView';
 import WeekView from './WeekView';
-// var Calendar = require('react-native-calendar-android');
 
 import CalendarMonthView from './CalendarDayView';
 
@@ -26,6 +25,11 @@ import CalendarMonthView from './CalendarDayView';
 export class App extends React.Component<any, any> {
 
     private interactionHandle = null;
+    private _navigator: React.NavigatorStatic;
+    private routes = [
+        {title: 'week-view', index: 0},
+        {title: 'subject-view', index: 1, subject: null},
+    ];
 
     constructor (props) {
         super(props);
@@ -33,18 +37,10 @@ export class App extends React.Component<any, any> {
             showAll: false
         }
     }
+
     _onPress (navigator: React.NavigatorStatic) {
-        // console.log(navigator.getCurrentRoutes())
         navigator.push(this.routes[1]);
-        this.interactionHandle = InteractionManager.createInteractionHandle();
-        // InteractionManager.runAfterInteractions(() => this.setState({showAll: true}))
     }
-    private _navigator: React.NavigatorStatic;
-    
-    private routes = [
-        {title: 'week-view', index: 0},
-        {title: 'subject-view', index: 1, subject: null},
-    ];
 
     navigatorRenderScene (route, navigator: React.NavigatorStatic) {
         if (!this._navigator) {
@@ -78,7 +74,6 @@ export class App extends React.Component<any, any> {
     onNavigatorDidFocus (route) {
         switch (route.title) {
             case 'subject-view': {
-                InteractionManager.clearInteractionHandle(this.interactionHandle);
                 this.setState({showAll: true});
                 break;
             }
@@ -86,7 +81,6 @@ export class App extends React.Component<any, any> {
     }
 
     render () {
-        
         return (
             <DrawerLayoutAndroid
                 drawerWidth={300}
@@ -105,14 +99,6 @@ export class App extends React.Component<any, any> {
                 />
             </DrawerLayoutAndroid>
         );
-
-        // return (
-        //     <View style={stylesheet.container}>
-        //         <Text>July</Text>
-        //         <CalendarMonthView month={7} year={2016} />
-        //     </View>
-        // )
-
     }
 }
     
