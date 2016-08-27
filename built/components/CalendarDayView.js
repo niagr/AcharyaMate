@@ -1,6 +1,22 @@
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
 export default class CalendarMonthView extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            activeDays: []
+        };
+    }
+    _onDateSelected(day) {
+        const oldActiveDays = this.state.activeDays;
+        let i;
+        this.setState({
+            activeDays: (i = oldActiveDays.indexOf(day)) === -1 ?
+                oldActiveDays.concat(day) :
+                oldActiveDays.slice(0, i).concat(oldActiveDays.slice(i + 1))
+        });
+        this.props.onDateSelected && this.props.onDateSelected(day);
+    }
     render() {
         const NUM_DAYS = new Date(this.props.year, this.props.month + 1, 0).getDate();
         const NUM_DAYS_IN_LAST_MONTH = new Date(this.props.year, this.props.month, 0).getDate();
@@ -20,10 +36,26 @@ export default class CalendarMonthView extends React.Component {
         }
         const daysTextNodes = dayList.map((day, i) => {
             let color = 'grey';
-            if (i < STARTING_DAY || i >= STARTING_DAY + NUM_DAYS)
+            let onPress = null;
+            let backgroundColor;
+            if (i < STARTING_DAY || i >= STARTING_DAY + NUM_DAYS) {
                 color = '#cccccc';
-            return React.createElement(View, {key: `row${i}`, style: stylesheet.dayTextContainer}, React.createElement(Text, {style: { color }}, day));
+            }
+            else {
+                if (this.state.activeDays.indexOf(day) !== -1) {
+                    color = 'white';
+                    backgroundColor = this.props.activeDayColor || 'red';
+                }
+                onPress = () => this._onDateSelected(day);
+            }
+            return React.createElement(Text, {style: [stylesheet.dayText, { color, backgroundColor }], onPress: onPress}, day);
         });
+        // Change color of selected days
+        // if (this.state.activeDays) {
+        //     for (let day of this.state.activeDays) {
+        //         daysTextNodes[day] = <Text style={{color: this.props.activeDayColor || 'red'}} >{day}</Text>
+        //     }
+        // }
         //
         const columns = [0, 1, 2, 3, 4, 5, 6].map(i => [0, 1, 2, 3, 4, 5].map(n => daysTextNodes[(n * 7) + i]));
         const columnViews = columns.map((colDays, i) => React.createElement(View, {key: i, style: stylesheet.columnContainer}, colDays));
@@ -52,7 +84,17 @@ const stylesheet = StyleSheet.create({
     },
     'dayTextContainer': {
         width: 20,
+        height: 20,
         alignItems: 'center'
+    },
+    'dayText': {
+        height: 30,
+        // lineHeight: 30,
+        width: 30,
+        // backgroundColor: 'yellow',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        borderRadius: 30
     },
     'otherMonthsDay': {
         color: 'grey'

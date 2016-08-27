@@ -4,11 +4,15 @@ import {
     View, 
     StyleSheet
 } from "react-native";
+
 interface CalendarMonthViewProps extends React.Props<CalendarMonthView> {
     year: number;
-    month: number
+    month: number;
+    activeDayColor?: string;
+    onDateSelected?: (day: number) => any;
 }
 interface CalendarMonthViewState {
+    activeDays: number[];
 } 
 
 type Month = 'January'|'February';
@@ -16,6 +20,25 @@ type Month = 'January'|'February';
 export type MonthMap = {[name:string]: number};
 
 export default class CalendarMonthView extends React.Component<CalendarMonthViewProps, CalendarMonthViewState> {
+
+    constructor () {
+        super();
+        this.state = {
+            activeDays: []
+        };
+    }
+
+    _onDateSelected (day: number) {
+        const oldActiveDays = this.state.activeDays;
+        let i;
+        this.setState({
+            activeDays: (i = oldActiveDays.indexOf(day)) === -1 ? 
+                            oldActiveDays.concat(day) : 
+                            oldActiveDays.slice(0, i).concat(oldActiveDays.slice(i+1))
+        })
+        this.props.onDateSelected && this.props.onDateSelected(day);
+    }
+
     render () {
         
         const NUM_DAYS = new Date(this.props.year, this.props.month + 1, 0).getDate();
@@ -32,6 +55,7 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
         for (let i = STARTING_DAY, day = 1; day <= NUM_DAYS; i++, day++) {
             dayList[i] = day;
         }
+
         // fill next day's days
         for (let i = STARTING_DAY + NUM_DAYS, day = 1; i < 42; i++, day++) {
             dayList[i] = day;
@@ -39,10 +63,26 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
 
         const daysTextNodes = dayList.map((day, i) => {
             let color = 'grey';
-            if (i < STARTING_DAY || i >= STARTING_DAY + NUM_DAYS)
+            let onPress = null;
+            let backgroundColor;
+            if (i < STARTING_DAY || i >= STARTING_DAY + NUM_DAYS) {
                 color = '#cccccc';
-            return <View key={`row${i}`} style={stylesheet.dayTextContainer} ><Text style={{color}} >{day}</Text></View>
+            } else {
+                if (this.state.activeDays.indexOf(day) !== -1) {
+                    color = 'white';
+                    backgroundColor = this.props.activeDayColor || 'red';
+                }
+                onPress = () => this._onDateSelected(day);
+            }
+            return <Text style={[stylesheet.dayText, {color, backgroundColor}]} onPress={onPress} >{day}</Text>
         });
+
+        // Change color of selected days
+        // if (this.state.activeDays) {
+        //     for (let day of this.state.activeDays) {
+        //         daysTextNodes[day] = <Text style={{color: this.props.activeDayColor || 'red'}} >{day}</Text>
+        //     }
+        // }
 
 //
 
@@ -86,7 +126,17 @@ const stylesheet = StyleSheet.create({
     },
     'dayTextContainer': {
         width: 20,
+        height: 20,
         alignItems: 'center'
+    },
+    'dayText': {
+        height: 30,
+        // lineHeight: 30,
+        width: 30,
+        // backgroundColor: 'yellow',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        borderRadius: 30
     },
     'otherMonthsDay': {
         color: 'grey'
