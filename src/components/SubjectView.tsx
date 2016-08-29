@@ -12,9 +12,12 @@ import {
 
 import CalendarMonthView, {MonthMap} from './CalendarDayView';
 import StaggeredListView from './StaggeredListView';
+import * as Util from '../Util';
 
 interface SubjectViewProps {
-    showPlaceholderForCostlyElements: boolean
+    showPlaceholderForCostlyElements: boolean;
+    subject: string;
+    
 }
 interface SubjectViewState {
 }
@@ -35,14 +38,20 @@ export default class SubjectView extends React.Component<SubjectViewProps, Subje
             <View
                 style={[stylesheet['subject-view-container']]}
             >
-                {this.props.showPlaceholderForCostlyElements ? <Text>Loading bro</Text> :
+                <View style={stylesheet.headerContainer} >
+                    <Text style={stylesheet.headerText} >{this.props.subject}</Text>
+                </View>
+                {!this.props.showPlaceholderForCostlyElements &&
+                    
                     <StaggeredListView>
                         {[0,1,2,3,4,5].map(month => 
                             <View key={`month${month}`} style={stylesheet.calenderContainer} >
-                                <Text style={{fontWeight:'900',fontSize: 16 , textAlign: 'center', lineHeight: 30}} >{SubjectView.months[month]}</Text>
+                                <Text style={{fontWeight:'900',fontSize: 18 , textAlign: 'center', lineHeight: 30}} >{SubjectView.months[month]}</Text>
                                 <CalendarMonthView
                                     month={month}
                                     year={2016}
+                                    activeDays={Util.makeRandomNumberArray(5, 30)}
+                                    activeDayColor={undefined}
                                 />
                             </View>
                         )}
@@ -61,5 +70,17 @@ const stylesheet = StyleSheet.create({
     },
     'calenderContainer': {
         paddingVertical: 20
+    },
+    'headerContainer': {
+        // backgroundColor: 'red',
+        height: 60,
+        justifyContent: 'space-around',
+        borderWidth: 1,
+        borderColor: '#dddddd'
+    },
+    'headerText': {
+        textAlign: 'center',
+        fontSize: 24,
+        // fontWeight: 'bold'
     }
 });

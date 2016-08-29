@@ -65,6 +65,7 @@ export class App extends React.Component<any, any> {
                 return (
                     <SubjectView
                         showPlaceholderForCostlyElements={!this.state.showAll}
+                        subject={'Compiler Design'}
                     />
                 )
         }

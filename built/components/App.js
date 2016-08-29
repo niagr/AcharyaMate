@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, StyleSheet, DrawerLayoutAndroid, Navigator, BackAndroid, InteractionManager } from "react-native";
+import { Text, View, StyleSheet, DrawerLayoutAndroid, Navigator, BackAndroid } from "react-native";
 import SubjectView from './SubjectView';
 import WeekView from './WeekView';
 export class App extends React.Component {
@@ -15,10 +15,7 @@ export class App extends React.Component {
         };
     }
     _onPress(navigator) {
-        // console.log(navigator.getCurrentRoutes())
         navigator.push(this.routes[1]);
-        this.interactionHandle = InteractionManager.createInteractionHandle();
-        // InteractionManager.runAfterInteractions(() => this.setState({showAll: true}))
     }
     navigatorRenderScene(route, navigator) {
         if (!this._navigator) {
@@ -36,13 +33,12 @@ export class App extends React.Component {
             case 'week-view':
                 return (React.createElement(WeekView, {subjectSelectHandler: (subject) => this._onPress(navigator)}));
             case 'subject-view':
-                return (React.createElement(SubjectView, {showPlaceholderForCostlyElements: !this.state.showAll}));
+                return (React.createElement(SubjectView, {showPlaceholderForCostlyElements: !this.state.showAll, subject: 'Compiler Design'}));
         }
     }
     onNavigatorDidFocus(route) {
         switch (route.title) {
             case 'subject-view': {
-                InteractionManager.clearInteractionHandle(this.interactionHandle);
                 this.setState({ showAll: true });
                 break;
             }
@@ -50,12 +46,6 @@ export class App extends React.Component {
     }
     render() {
         return (React.createElement(DrawerLayoutAndroid, {drawerWidth: 300, drawerPosition: DrawerLayoutAndroid.positions.Left, renderNavigationView: () => React.createElement(View, null, React.createElement(Text, null, "Navigation Bitchez!!"))}, React.createElement(Navigator, {initialRoute: this.routes[0], configureScene: () => Navigator.SceneConfigs.FloatFromBottomAndroid, style: stylesheet.container, renderScene: (route, navigator) => this.navigatorRenderScene(route, navigator), onDidFocus: (r) => this.onNavigatorDidFocus(r)})));
-        // return (
-        //     <View style={stylesheet.container}>
-        //         <Text>July</Text>
-        //         <CalendarMonthView month={7} year={2016} />
-        //     </View>
-        // )
     }
 }
 const stylesheet = StyleSheet.create({

@@ -1,10 +1,11 @@
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
+const WeekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export default class CalendarMonthView extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            activeDays: []
+            activeDays: props.activeDays ? props.activeDays : []
         };
     }
     _onDateSelected(day) {
@@ -50,20 +51,13 @@ export default class CalendarMonthView extends React.Component {
             }
             return React.createElement(Text, {style: [stylesheet.dayText, { color, backgroundColor }], onPress: onPress}, day);
         });
-        // Change color of selected days
-        // if (this.state.activeDays) {
-        //     for (let day of this.state.activeDays) {
-        //         daysTextNodes[day] = <Text style={{color: this.props.activeDayColor || 'red'}} >{day}</Text>
-        //     }
-        // }
-        //
         const columns = [0, 1, 2, 3, 4, 5, 6].map(i => [0, 1, 2, 3, 4, 5].map(n => daysTextNodes[(n * 7) + i]));
+        columns.forEach((col, i) => col.splice(0, 0, React.createElement(Text, {style: { fontWeight: 'bold', color: '#aaaaaa' }}, WeekDays[i])));
         const columnViews = columns.map((colDays, i) => React.createElement(View, {key: i, style: stylesheet.columnContainer}, colDays));
         return React.createElement(View, {style: stylesheet.mainContainer}, columnViews);
-        //
-        let rows = [0, 1, 2, 3, 4, 5].map(i => daysTextNodes.slice(i * 7, (i + 1) * 7)); // split array up into smaller arrays for each week
-        rows = rows.map((rowDays, i) => React.createElement(View, {key: i, style: stylesheet.rowContainer}, rowDays));
-        return React.createElement(View, {style: stylesheet.mainContainer}, rows);
+        // let rows: any[] = [0,1,2,3,4,5].map(i => daysTextNodes.slice(i*7, (i+1)*7)) // split array up into smaller arrays for each week
+        // rows = rows.map((rowDays, i) => <View key={i} style={stylesheet.rowContainer}>{rowDays}</View>);
+        // return <View style={stylesheet.mainContainer}>{rows}</View>;
     }
 }
 const stylesheet = StyleSheet.create({
@@ -89,9 +83,7 @@ const stylesheet = StyleSheet.create({
     },
     'dayText': {
         height: 30,
-        // lineHeight: 30,
         width: 30,
-        // backgroundColor: 'yellow',
         textAlign: 'center',
         textAlignVertical: 'center',
         borderRadius: 30

@@ -9,6 +9,7 @@ interface CalendarMonthViewProps extends React.Props<CalendarMonthView> {
     year: number;
     month: number;
     activeDayColor?: string;
+    activeDays?: number[];
     onDateSelected?: (day: number) => any;
 }
 interface CalendarMonthViewState {
@@ -19,12 +20,14 @@ type Month = 'January'|'February';
 
 export type MonthMap = {[name:string]: number};
 
+const WeekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 export default class CalendarMonthView extends React.Component<CalendarMonthViewProps, CalendarMonthViewState> {
 
-    constructor () {
-        super();
+    constructor (props) {
+        super(props);
         this.state = {
-            activeDays: []
+            activeDays: props.activeDays ? props.activeDays : []
         };
     }
 
@@ -77,33 +80,14 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
             return <Text style={[stylesheet.dayText, {color, backgroundColor}]} onPress={onPress} >{day}</Text>
         });
 
-        // Change color of selected days
-        // if (this.state.activeDays) {
-        //     for (let day of this.state.activeDays) {
-        //         daysTextNodes[day] = <Text style={{color: this.props.activeDayColor || 'red'}} >{day}</Text>
-        //     }
-        // }
-
-//
-
-
         const columns = [0,1,2,3,4,5,6].map(i => [0,1,2,3,4,5].map(n => daysTextNodes[(n*7) + i]));
-
+        columns.forEach((col, i) => col.splice(0, 0, <Text style={{fontWeight: 'bold', color: '#aaaaaa'}} >{WeekDays[i]}</Text>));
         const columnViews = columns.map((colDays, i) => <View key={i} style={stylesheet.columnContainer}>{colDays}</View>)
-
         return <View style={stylesheet.mainContainer}>{columnViews}</View>;
 
-
-//
-
-
-
-        let rows: any[] = [0,1,2,3,4,5].map(i => daysTextNodes.slice(i*7, (i+1)*7)) // split array up into smaller arrays for each week
-        
-        rows = rows.map((rowDays, i) => <View key={i} style={stylesheet.rowContainer}>{rowDays}</View>);
-
-
-        return <View style={stylesheet.mainContainer}>{rows}</View>;
+        // let rows: any[] = [0,1,2,3,4,5].map(i => daysTextNodes.slice(i*7, (i+1)*7)) // split array up into smaller arrays for each week
+        // rows = rows.map((rowDays, i) => <View key={i} style={stylesheet.rowContainer}>{rowDays}</View>);
+        // return <View style={stylesheet.mainContainer}>{rows}</View>;
     }
 }
 
@@ -131,9 +115,7 @@ const stylesheet = StyleSheet.create({
     },
     'dayText': {
         height: 30,
-        // lineHeight: 30,
         width: 30,
-        // backgroundColor: 'yellow',
         textAlign: 'center',
         textAlignVertical: 'center',
         borderRadius: 30
