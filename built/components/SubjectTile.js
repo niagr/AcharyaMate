@@ -1,22 +1,15 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, TouchableNativeFeedback, InteractionManager } from 'react-native';
+import { StyleSheet, Text, View, TouchableNativeFeedback } from 'react-native';
 export default class SubjectTile extends React.Component {
-    // measureCustomAsync (callback: (x, y, w, h, px, py) => any) {
-    //     (this.refs['container'] as any).measureLayout(findNodeHandle(this) , (...args) => {
-    //         callback.apply(undefined, args);
-    //     });
-    // }
     getContainerView() {
         return this.refs['container'];
     }
-    shouldComponentUpdate(nextProps, nextState) {
-        return false;
-    }
     _onPress() {
-        InteractionManager.runAfterInteractions(() => this.props.onPress());
+        // InteractionManager.runAfterInteractions(() => this.props.onPress());
+        this.props.onPress();
     }
     render() {
-        return (React.createElement(TouchableNativeFeedback, {ref: 'container', style: [], onPress: this._onPress.bind(this), background: TouchableNativeFeedback.Ripple('green', false), delayPressIn: 0}, React.createElement(View, {style: [
+        return (React.createElement(TouchableNativeFeedback, {ref: 'container', style: [], onPress: this._onPress.bind(this), background: TouchableNativeFeedback.Ripple('#00000033', false), delayPressIn: 0}, React.createElement(View, {style: [
             stylesheet.container,
             this.props.backgroundColor && { backgroundColor: this.props.backgroundColor }
         ]}, React.createElement(Text, {style: stylesheet.title}, this.props.subjectTitle), React.createElement(Text, {style: stylesheet.professorText}, "Prof. ", this.props.professor))));
@@ -28,17 +21,17 @@ const stylesheet = StyleSheet.create({
         paddingVertical: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'grey',
-        elevation: 3,
+        backgroundColor: 'white',
+        elevation: 2,
         borderRadius: 2
     },
     title: {
         textAlign: 'center',
         fontSize: 30,
-        color: 'white'
+        color: 'grey'
     },
     professorText: {
         fontSize: 15,
-        color: 'white'
+        color: 'grey'
     }
 });

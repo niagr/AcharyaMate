@@ -10,15 +10,15 @@ type AttendanceBySubject = {[subjectCode: string] : SubjectAttendance};
 
 
 type WeeklyRoutine = {[dayOfWeek: number]: string[]};
-const routine: WeeklyRoutine = {
-    0: ['10CS61', '10IS51', '10CS52', '10CS53', '10CS54', '10CS55'],
-    1: ['10CS55', '10CS55', '10CS54', '10CS54', '10IS51', '10CS54'],
-    2: ['10CS61', '10IS51', '10CS52', '10CS53', '10CS54', '10CS55'],
-    3: ['10CS55', '10CS55', '10CS54', '10CS54', '10IS51', '10CS54'],
-    4: ['10CS61', '10IS51', '10CS52', '10CS53', '10CS54', '10CS55'],
-    5: ['10CS55', '10CS55', '10CS54', '10CS54', '10IS51', '10CS54'],
-    6: []
-}
+export const routine: WeeklyRoutine = [
+    ['10CS56', '10IS51', '10CS52', '10CS53', '10CS54', '10CS55'],
+    ['10CS55', '10CS55', '10CS54', '10CS54', '10IS51', '10CS54'],
+    ['10CS56', '10IS51', '10CS52', '10CS53', '10CS54', '10CS55'],
+    ['10CS55', '10CS55', '10CS54', '10CS54', '10IS51', '10CS54'],
+    ['10CS56', '10IS51', '10CS52', '10CS53', '10CS54', '10CS55'],
+    ['10CS55', '10CS55', '10CS54', '10CS54', '10IS51', '10CS54'],
+    []
+]
 
 function calcAttendaceForSubjects (subjects: SubjectMap, attendanceRecord: AttendanceRecord) {
     const attendanceBySubject: {[subjectCode: string]: {total: number, attended: number}} = {};
@@ -71,8 +71,3 @@ function calcAttendanceForYear (weekRoutine: WeeklyRoutine, yearAttendanceRecord
     }
     return res;
 }
-
-// console.log(routine[0], attendanceRecord[0][0]);
-var start = process.hrtime();
-calcAttendanceForYear(routine, attendanceRecord);
-console.log((process.hrtime()[1] - start[1])/1000000);

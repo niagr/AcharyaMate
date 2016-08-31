@@ -1,4 +1,4 @@
-const subjects = {
+export const subjects = {
     "10MAT11": {
         "name": "Engineering Mathematics-I"
     },

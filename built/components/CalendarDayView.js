@@ -49,10 +49,10 @@ export default class CalendarMonthView extends React.Component {
                 }
                 onPress = () => this._onDateSelected(day);
             }
-            return React.createElement(Text, {style: [stylesheet.dayText, { color, backgroundColor }], onPress: onPress}, day);
+            return React.createElement(Text, {key: i, style: [stylesheet.dayText, { color, backgroundColor }], onPress: onPress}, day);
         });
         const columns = [0, 1, 2, 3, 4, 5, 6].map(i => [0, 1, 2, 3, 4, 5].map(n => daysTextNodes[(n * 7) + i]));
-        columns.forEach((col, i) => col.splice(0, 0, React.createElement(Text, {style: { fontWeight: 'bold', color: '#aaaaaa' }}, WeekDays[i])));
+        columns.forEach((col, i) => col.splice(0, 0, React.createElement(Text, {key: `header${WeekDays[i]}`, style: { fontWeight: 'bold', color: '#aaaaaa' }}, WeekDays[i])));
         const columnViews = columns.map((colDays, i) => React.createElement(View, {key: i, style: stylesheet.columnContainer}, colDays));
         return React.createElement(View, {style: stylesheet.mainContainer}, columnViews);
         // let rows: any[] = [0,1,2,3,4,5].map(i => daysTextNodes.slice(i*7, (i+1)*7)) // split array up into smaller arrays for each week

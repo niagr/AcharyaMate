@@ -15,9 +15,9 @@ import ScrollableTabView from "react-native-scrollable-tab-view";
 import DayView from './DayView';
 import SubjectView from './SubjectView';
 import WeekView from './WeekView';
-
 import CalendarMonthView from './CalendarDayView';
-
+import {routine} from '../mock/data';
+import {subjects, SubjectMap} from '../mock/subjects'
 
 
 
@@ -59,7 +59,10 @@ export class App extends React.Component<any, any> {
                 return (
                     <WeekView
                         subjectSelectHandler={(subject: string) => this._onPress(navigator)}
+                        subjects={subjects}
+                        routine={routine as any}
                     />
+                    
                 )
             case 'subject-view':
                 return (
@@ -83,22 +86,20 @@ export class App extends React.Component<any, any> {
 
     render () {
         return (
-            <DrawerLayoutAndroid
-                drawerWidth={300}
-                drawerPosition={DrawerLayoutAndroid.positions.Left}
-                renderNavigationView={() => 
-                    <View>
-                        <Text>Navigation Bitchez!!</Text>
-                    </View>
-                }>
-                <Navigator
-                    initialRoute={this.routes[0]}
-                    configureScene={() => Navigator.SceneConfigs.FloatFromBottomAndroid}
-                    style={stylesheet.container}
-                    renderScene={(route, navigator) => this.navigatorRenderScene(route, navigator)}
-                    onDidFocus={(r) => this.onNavigatorDidFocus(r)}
-                />
-            </DrawerLayoutAndroid>
+            <Navigator
+                initialRoute={this.routes[0]}
+                configureScene={() => Navigator.SceneConfigs.FloatFromBottomAndroid}
+                style={stylesheet.container}
+                renderScene={(route, navigator) => this.navigatorRenderScene(route, navigator)}
+                onDidFocus={(r) => this.onNavigatorDidFocus(r)}
+            />
+
+            // <WeekView
+            //     subjectSelectHandler={(subject: string) => this._onPress(navigator)}
+            //     subjects={subjects}
+            //     routine={routine as any}
+            // />
+
         );
     }
 }
@@ -109,3 +110,4 @@ const stylesheet = StyleSheet.create({
         alignItems: "stretch"
     }
 });
+

@@ -1,7 +1,9 @@
 import * as React from "react";
-import { Text, View, StyleSheet, DrawerLayoutAndroid, Navigator, BackAndroid } from "react-native";
+import { StyleSheet, Navigator, BackAndroid } from "react-native";
 import SubjectView from './SubjectView';
 import WeekView from './WeekView';
+import { routine } from '../mock/data';
+import { subjects } from '../mock/subjects';
 export class App extends React.Component {
     constructor(props) {
         super(props);
@@ -31,7 +33,7 @@ export class App extends React.Component {
         }
         switch (route.title) {
             case 'week-view':
-                return (React.createElement(WeekView, {subjectSelectHandler: (subject) => this._onPress(navigator)}));
+                return (React.createElement(WeekView, {subjectSelectHandler: (subject) => this._onPress(navigator), subjects: subjects, routine: routine}));
             case 'subject-view':
                 return (React.createElement(SubjectView, {showPlaceholderForCostlyElements: !this.state.showAll, subject: 'Compiler Design'}));
         }
@@ -45,7 +47,7 @@ export class App extends React.Component {
         }
     }
     render() {
-        return (React.createElement(DrawerLayoutAndroid, {drawerWidth: 300, drawerPosition: DrawerLayoutAndroid.positions.Left, renderNavigationView: () => React.createElement(View, null, React.createElement(Text, null, "Navigation Bitchez!!"))}, React.createElement(Navigator, {initialRoute: this.routes[0], configureScene: () => Navigator.SceneConfigs.FloatFromBottomAndroid, style: stylesheet.container, renderScene: (route, navigator) => this.navigatorRenderScene(route, navigator), onDidFocus: (r) => this.onNavigatorDidFocus(r)})));
+        return (React.createElement(Navigator, {initialRoute: this.routes[0], configureScene: () => Navigator.SceneConfigs.FloatFromBottomAndroid, style: stylesheet.container, renderScene: (route, navigator) => this.navigatorRenderScene(route, navigator), onDidFocus: (r) => this.onNavigatorDidFocus(r)}));
     }
 }
 const stylesheet = StyleSheet.create({

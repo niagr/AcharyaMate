@@ -77,11 +77,11 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
                 }
                 onPress = () => this._onDateSelected(day);
             }
-            return <Text style={[stylesheet.dayText, {color, backgroundColor}]} onPress={onPress} >{day}</Text>
+            return <Text key={i} style={[stylesheet.dayText, {color, backgroundColor}]} onPress={onPress} >{day}</Text>
         });
 
         const columns = [0,1,2,3,4,5,6].map(i => [0,1,2,3,4,5].map(n => daysTextNodes[(n*7) + i]));
-        columns.forEach((col, i) => col.splice(0, 0, <Text style={{fontWeight: 'bold', color: '#aaaaaa'}} >{WeekDays[i]}</Text>));
+        columns.forEach((col, i) => col.splice(0, 0, <Text key={`header${WeekDays[i]}`} style={{fontWeight: 'bold', color: '#aaaaaa'}} >{WeekDays[i]}</Text>));
         const columnViews = columns.map((colDays, i) => <View key={i} style={stylesheet.columnContainer}>{colDays}</View>)
         return <View style={stylesheet.mainContainer}>{columnViews}</View>;
 

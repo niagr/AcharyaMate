@@ -7,40 +7,36 @@ import {
   TouchableNativeFeedback,
   InteractionManager
 } from 'react-native';
+
 interface SubjectTileProps extends React.Props<SubjectTile> {
     subjectTitle: string;
     professor: string;
     backgroundColor?: string;
     onPress?: () => void;
 }
+
 export default class SubjectTile extends React.Component<SubjectTileProps, any> {
-    // measureCustomAsync (callback: (x, y, w, h, px, py) => any) {
-    //     (this.refs['container'] as any).measureLayout(findNodeHandle(this) , (...args) => {
-    //         callback.apply(undefined, args);
-    //     });
-    // }
+
     getContainerView () {
         return this.refs['container'];
     }
-    shouldComponentUpdate (nextProps, nextState) {
-        return false;
-    }
     
     _onPress () {
-        InteractionManager.runAfterInteractions(() => this.props.onPress());
+        // InteractionManager.runAfterInteractions(() => this.props.onPress());
+        this.props.onPress()
     }
 
     render () {
         return (
             <TouchableNativeFeedback
-                    ref='container'   
-                    style={[  
-                        // stylesheet.container, 
-                        // this.props.backgroundColor && {backgroundColor: this.props.backgroundColor},
-                    ]}
-                    onPress={this._onPress.bind(this)}
-                    background={TouchableNativeFeedback.Ripple('green', false)}
-                    delayPressIn={0}
+                ref='container'   
+                style={[  
+                    // stylesheet.container, 
+                    // this.props.backgroundColor && {backgroundColor: this.props.backgroundColor},
+                ]}
+                onPress={this._onPress.bind(this)}
+                background={TouchableNativeFeedback.Ripple('#00000033', false)}
+                delayPressIn={0}
             >
                 <View 
                     style={[
@@ -61,17 +57,17 @@ const stylesheet = StyleSheet.create({
         paddingVertical: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'grey',
-        elevation: 3,
+        backgroundColor: 'white',
+        elevation: 2,
         borderRadius: 2
     },
     title : {
         textAlign: 'center',
         fontSize: 30,
-        color: 'white'
+        color: 'grey'
     },
     professorText: {
         fontSize: 15,
-        color: 'white'
+        color: 'grey'
     }
 });

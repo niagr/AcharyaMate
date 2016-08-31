@@ -4,7 +4,7 @@ interface SubjectRecord {
 
 export type SubjectMap = {[subjectCode: string]: SubjectRecord}
 
-const subjects: SubjectMap = {
+export const subjects: SubjectMap = {
   "10MAT11": {
     "name": "Engineering Mathematics-I"
   },
