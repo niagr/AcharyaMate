@@ -3,7 +3,8 @@ import {
     Text, 
     View, 
     StyleSheet, 
-    ToolbarAndroid
+    ToolbarAndroid,
+    StatusBar
 } from "react-native";
 import ScrollableTabView from "react-native-scrollable-tab-view";
 import DayView from './DayView';
@@ -53,6 +54,10 @@ export default class WeekView extends React.Component<WeekViewProps, WeekViewSta
 
         return (
             <View style={{flex: 1}}>
+                <StatusBar
+                    backgroundColor={BACKGROUND_COLOR}
+                    barStyle="light-content"
+                />
                 <ToolbarAndroid
                     title="Week View"
                     titleColor='white'
