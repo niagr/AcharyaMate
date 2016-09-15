@@ -13,13 +13,13 @@ import DayView from './DayView';
 
 const WeekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+const STATUSBAR_COLOR = '#600000';
 const BACKGROUND_COLOR = '#800000';
 const TEXT_COLOR = 'white';
 
 
 interface WeekViewProps extends React.Props<WeekView> {
     subjectSelectHandler: (subject: string) => any;
-    // children: React.Component<any, any>[] | React.Component<any, any>;
     routine: string[][];
     subjects: {[subjectCode: string] : {name: string;}}
 }
@@ -28,11 +28,9 @@ interface WeekViewState {
 export default class WeekView extends React.Component<WeekViewProps, WeekViewState> {
     render () {
 
-
         // convert our data to a form suiltable for passing to DayView as a prop.
         const routinePropArray = this.props.routine.map(dayRoutine => {
             return dayRoutine.map(sub => {
-                // console.log(this.props.subjects);
                 return {
                     name: this.props.subjects[sub].name,
                     professor: ''
@@ -55,7 +53,7 @@ export default class WeekView extends React.Component<WeekViewProps, WeekViewSta
         return (
             <View style={{flex: 1}}>
                 <StatusBar
-                    backgroundColor={BACKGROUND_COLOR}
+                    backgroundColor={STATUSBAR_COLOR}
                     barStyle="light-content"
                 />
                 <ToolbarAndroid

@@ -5,14 +5,14 @@ export default class CalendarMonthView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeDays: props.activeDays ? props.activeDays : []
+            userSelectedActiveDays: [] //props.activeDays ? props.activeDays : []
         };
     }
     _onDateSelected(day) {
-        const oldActiveDays = this.state.activeDays;
+        const oldActiveDays = this.state.userSelectedActiveDays;
         let i;
         this.setState({
-            activeDays: (i = oldActiveDays.indexOf(day)) === -1 ?
+            userSelectedActiveDays: (i = oldActiveDays.indexOf(day)) === -1 ?
                 oldActiveDays.concat(day) :
                 oldActiveDays.slice(0, i).concat(oldActiveDays.slice(i + 1))
         });
@@ -23,6 +23,7 @@ export default class CalendarMonthView extends React.Component {
         const NUM_DAYS_IN_LAST_MONTH = new Date(this.props.year, this.props.month, 0).getDate();
         const STARTING_DAY = new Date(this.props.year, this.props.month, 1).getDay();
         const dayList = Array(42); // holds the numbers that are shown on the calendar in order (0-indexed)
+        const activeDays = this.props.activeDays.concat(this.state.userSelectedActiveDays);
         // fill last month's days
         for (let i = STARTING_DAY - 1, k = 0; i >= 0; i--, k++) {
             dayList[i] = NUM_DAYS_IN_LAST_MONTH - k;
@@ -43,7 +44,7 @@ export default class CalendarMonthView extends React.Component {
                 color = '#cccccc';
             }
             else {
-                if (this.state.activeDays.indexOf(day) !== -1) {
+                if (activeDays.indexOf(day) !== -1) {
                     color = 'white';
                     backgroundColor = this.props.activeDayColor || 'red';
                 }

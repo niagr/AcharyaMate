@@ -50,7 +50,7 @@ export default class SubjectView extends React.Component<SubjectViewProps, Subje
                                 <CalendarMonthView
                                     month={month}
                                     year={2016}
-                                    activeDays={Util.makeRandomNumberArray(5, 30)}
+                                    activeDays={[2, 6, 21]}
                                     activeDayColor={undefined}
                                 />
                             </View>

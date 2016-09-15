@@ -46,6 +46,7 @@ function calcAttendanceForDay (subjects: string[], attendance: number[]): Attend
     return res;
 }
 
+// FIXME: Assumes starting day of the month is a Monday.
 function calcAttendanceForMonth (weekRoutine: WeeklyRoutine, monthAttendanceRecord: number[][]) {
     const res: AttendanceBySubject = {};
     for (let day = 0; day < monthAttendanceRecord.length; day++) {
@@ -70,4 +71,29 @@ function calcAttendanceForYear (weekRoutine: WeeklyRoutine, yearAttendanceRecord
         }
     }
     return res;
+}
+
+
+function calcAttRecForDay (dayRoutine: string[], subject: string, dayAttRec: number[]): number[] {
+    const res: number[] = [];
+    for (let s = 0; s < dayRoutine.length; s++) {
+        if (dayRoutine[s] === subject) {
+            res[s] = dayAttRec[s] === 1 ? 1 : 0;
+        } else {
+            res[s] = -1;
+        }
+    }
+    return res;
+}
+
+function calcAttRecForMonth (weekRoutine: string[][], subject: string, monthAttRec: number[][]): number[][] {
+    const res: number[][] = [];
+    for (let day = 0; day < monthAttRec.length; day++) {
+        res[day] = calcAttRecForDay(dayRoutine, subject, monthAttRec[day]);
+    }
+    return res;
+}
+
+function calcAttRecForMonths (months: number[], ) {
+    return months.map(m => calcAttRecForMonth(m))
 }
