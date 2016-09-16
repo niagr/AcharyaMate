@@ -9,7 +9,7 @@ interface CalendarMonthViewProps extends React.Props<CalendarMonthView> {
     year: number;
     month: number;
     activeDayColor?: string;
-    activeDays?: number[];
+    activeDays?: number[]; // 0-based days
     onDateSelected?: (day: number) => any;
 }
 interface CalendarMonthViewState {
@@ -20,7 +20,7 @@ type Month = 'January'|'February';
 
 export type MonthMap = {[name:string]: number};
 
-const WeekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WeekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default class CalendarMonthView extends React.Component<CalendarMonthViewProps, CalendarMonthViewState> {
 
@@ -73,7 +73,7 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
             if (i < STARTING_DAY || i >= STARTING_DAY + NUM_DAYS) {
                 color = '#cccccc';
             } else {
-                if (activeDays.indexOf(day) !== -1) {
+                if (activeDays.indexOf(day-1) !== -1) {
                     color = 'white';
                     backgroundColor = this.props.activeDayColor || 'red';
                 }

@@ -7,7 +7,7 @@ import {
 import SubjectTile from './SubjectTile'
 
 interface Subject {
-    // subjectCode: string;
+    subjectCode: string;
     name: string;
     professor: string;
 }
@@ -28,7 +28,7 @@ export default class DayView extends React.Component<DayViewProps, any> {
                         <SubjectTile
                             professor={sub.professor}
                             subjectTitle={sub.name}
-                            onPress={this.props.onPress}
+                            onPress={() => this.props.onPress(sub.subjectCode)}
                         />
                     </View>
                 )}

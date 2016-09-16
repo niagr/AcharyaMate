@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
-const WeekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WeekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export default class CalendarMonthView extends React.Component {
     constructor(props) {
         super(props);
@@ -44,7 +44,7 @@ export default class CalendarMonthView extends React.Component {
                 color = '#cccccc';
             }
             else {
-                if (activeDays.indexOf(day) !== -1) {
+                if (activeDays.indexOf(day - 1) !== -1) {
                     color = 'white';
                     backgroundColor = this.props.activeDayColor || 'red';
                 }

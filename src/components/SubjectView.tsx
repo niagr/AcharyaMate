@@ -14,10 +14,24 @@ import CalendarMonthView, {MonthMap} from './CalendarDayView';
 import StaggeredListView from './StaggeredListView';
 import * as Util from '../Util';
 
+
+/**
+ * Gets the absent days from daily attendance for the month
+ * 
+ * @param attRec [month][day]
+ * @returns
+ */
+function getAbsentDates (attRecByMonth: number[][]): number[][] {
+    return attRecByMonth.map(attByDay => {
+        return attByDay.map((day, d) => day === 0 ? d : null).filter(d => d !== null);
+    });
+}
+
+
 interface SubjectViewProps {
     showPlaceholderForCostlyElements: boolean;
     subject: string;
-    
+    attendanceRecord: number[][]; // [month][day]
 }
 interface SubjectViewState {
 }
@@ -50,7 +64,9 @@ export default class SubjectView extends React.Component<SubjectViewProps, Subje
                                 <CalendarMonthView
                                     month={month}
                                     year={2016}
-                                    activeDays={[2, 6, 21]}
+                                    activeDays={
+                                        this.props.attendanceRecord[month].map((day, d) => day === 0 ? d : null).filter(d => d !== null)
+                                    }
                                     activeDayColor={undefined}
                                 />
                             </View>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from "react"
 import { 
     Text, 
     View, 
@@ -16,9 +16,9 @@ import DayView from './DayView';
 import SubjectView from './SubjectView';
 import WeekView from './WeekView';
 import CalendarMonthView from './CalendarDayView';
-import {routine} from '../mock/data';
-import {subjects, SubjectMap} from '../mock/subjects'
-
+import {routine, calcAttRecForMonth} from '../mock/data';
+import {subjects, SubjectMap} from '../mock/subjects';
+import {AttendanceRecord, records} from '../mock/attendance-record';
 
 
 
@@ -28,7 +28,7 @@ export class App extends React.Component<any, any> {
     private _navigator: React.NavigatorStatic;
     private routes = [
         {title: 'week-view', index: 0},
-        {title: 'subject-view', index: 1, subject: null},
+        {title: 'subject-view', index: 1, subject: '10IS51'},
     ];
 
     constructor (props) {
@@ -38,8 +38,11 @@ export class App extends React.Component<any, any> {
         }
     }
 
-    _onPress (navigator: React.NavigatorStatic) {
-        navigator.push(this.routes[1]);
+    _onPress (navigator: React.NavigatorStatic, subject: string) {
+        navigator.push({
+            title: 'subject-view',
+            subject
+        });
     }
 
     navigatorRenderScene (route, navigator: React.NavigatorStatic) {
@@ -57,20 +60,36 @@ export class App extends React.Component<any, any> {
         switch (route.title) {
             case 'week-view': 
                 return (
-                    <WeekView
-                        subjectSelectHandler={(subject: string) => this._onPress(navigator)}
-                        subjects={subjects}
-                        routine={routine as any}
-                    />
+                        <WeekView
+                            subjectSelectHandler={(subject: string) => this._onPress(navigator, subject)}
+                            subjects={subjects}
+                            routine={routine as any}
+                        />
                     
-                )
+                );
             case 'subject-view':
+                const subject = route.subject;
+                // Attendance record in the form of a 2D array indexed as [month][day]
+                const attRec = [0,1,2,3,4,5].map(month => {
+                    const foo = calcAttRecForMonth(subject, routine as string[][], records[month], month, 2016)
+                    // flatten hourly attendance into daily. 
+                    // Here we take any hour attended as 'attended all hours of that subject in the day'.
+                    const bar = foo.map(day => {
+                        return (
+                            day.indexOf(1) !== -1 ? 1 : 
+                            day.indexOf(0) !== -1 ? 0 : 
+                            -1
+                        );
+                    });
+                    return bar;
+                });
                 return (
                     <SubjectView
                         showPlaceholderForCostlyElements={!this.state.showAll}
-                        subject={'Compiler Design'}
+                        subject={subjects[route.subject].name}
+                        attendanceRecord={attRec}
                     />
-                )
+                );
         }
         
     }
@@ -95,10 +114,12 @@ export class App extends React.Component<any, any> {
             />
 
             // <WeekView
-            //     subjectSelectHandler={(subject: string) => this._onPress(navigator)}
+            //     subjectSelectHandler={() => void 0}
             //     subjects={subjects}
             //     routine={routine as any}
             // />
+
+            // <View><Text>Hellooooooooo</Text></View>
 
         );
     }
@@ -107,7 +128,8 @@ export class App extends React.Component<any, any> {
 const stylesheet = StyleSheet.create({
     "container": {
         flex: 1,
-        alignItems: "stretch"
+        alignItems: "stretch",
+        // backgroundColor: 'red'
     }
 });
 

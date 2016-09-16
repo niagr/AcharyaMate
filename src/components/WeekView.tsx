@@ -11,7 +11,7 @@ import DayView from './DayView';
 // import {routine} from '../mock/data'
 // import {subjects, SubjectMap} from '../mock/subjects'
 
-const WeekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WeekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const STATUSBAR_COLOR = '#600000';
 const BACKGROUND_COLOR = '#800000';
@@ -32,13 +32,15 @@ export default class WeekView extends React.Component<WeekViewProps, WeekViewSta
         const routinePropArray = this.props.routine.map(dayRoutine => {
             return dayRoutine.map(sub => {
                 return {
+                    subjectCode: sub,
                     name: this.props.subjects[sub].name,
                     professor: ''
                 };
             });
         });
 
-        const tabs =  WeekDays.map((day, i) => {
+        const tabs =  WeekDays.slice(1).map((day, i) => { // ignore Sunday
+            i++; // adjust index to account for ignoring Sunday.
             return ( 
                 <DayView  
                     tabLabel={day} 
