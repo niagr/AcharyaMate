@@ -5,7 +5,7 @@ export default class CalendarMonthView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userSelectedActiveDays: [] //props.activeDays ? props.activeDays : []
+            userSelectedActiveDays: props.initialActiveDays || []
         };
     }
     _onDateSelected(day) {
@@ -23,7 +23,8 @@ export default class CalendarMonthView extends React.Component {
         const NUM_DAYS_IN_LAST_MONTH = new Date(this.props.year, this.props.month, 0).getDate();
         const STARTING_DAY = new Date(this.props.year, this.props.month, 1).getDay();
         const dayList = Array(42); // holds the numbers that are shown on the calendar in order (0-indexed)
-        const activeDays = this.props.activeDays.concat(this.state.userSelectedActiveDays);
+        // const activeDays = this.props.activeDays.concat(this.state.userSelectedActiveDays);
+        const activeDays = (this.state.userSelectedActiveDays);
         // fill last month's days
         for (let i = STARTING_DAY - 1, k = 0; i >= 0; i--, k++) {
             dayList[i] = NUM_DAYS_IN_LAST_MONTH - k;
@@ -48,7 +49,7 @@ export default class CalendarMonthView extends React.Component {
                     color = 'white';
                     backgroundColor = this.props.activeDayColor || 'red';
                 }
-                onPress = () => this._onDateSelected(day);
+                onPress = () => this._onDateSelected(day - 1);
             }
             return React.createElement(Text, {key: i, style: [stylesheet.dayText, { color, backgroundColor }], onPress: onPress}, day);
         });

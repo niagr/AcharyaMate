@@ -64,7 +64,7 @@ export default class SubjectView extends React.Component<SubjectViewProps, Subje
                                 <CalendarMonthView
                                     month={month}
                                     year={2016}
-                                    activeDays={
+                                    initialActiveDays={
                                         this.props.attendanceRecord[month].map((day, d) => day === 0 ? d : null).filter(d => d !== null)
                                     }
                                     activeDayColor={undefined}

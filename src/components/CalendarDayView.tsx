@@ -9,7 +9,7 @@ interface CalendarMonthViewProps extends React.Props<CalendarMonthView> {
     year: number;
     month: number;
     activeDayColor?: string;
-    activeDays?: number[]; // 0-based days
+    initialActiveDays?: number[]; // 0-based days
     onDateSelected?: (day: number) => any;
 }
 interface CalendarMonthViewState {
@@ -27,7 +27,7 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
     constructor (props) {
         super(props);
         this.state = {
-            userSelectedActiveDays: [] //props.activeDays ? props.activeDays : []
+            userSelectedActiveDays: props.initialActiveDays || []
         };
     }
 
@@ -49,7 +49,8 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
         const STARTING_DAY = new Date(this.props.year, this.props.month, 1).getDay();
         const dayList: number[] = Array(42); // holds the numbers that are shown on the calendar in order (0-indexed)
 
-        const activeDays = this.props.activeDays.concat(this.state.userSelectedActiveDays);
+        // const activeDays = this.props.activeDays.concat(this.state.userSelectedActiveDays);
+        const activeDays = (this.state.userSelectedActiveDays);
         
         // fill last month's days
         for (let i = STARTING_DAY - 1, k = 0; i >= 0; i--, k++) {
@@ -77,7 +78,7 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
                     color = 'white';
                     backgroundColor = this.props.activeDayColor || 'red';
                 }
-                onPress = () => this._onDateSelected(day);
+                onPress = () => this._onDateSelected(day - 1);
             }
             return <Text key={i} style={[stylesheet.dayText, {color, backgroundColor}]} onPress={onPress} >{day}</Text>
         });
