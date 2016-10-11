@@ -5,7 +5,8 @@
         "module": "es2015",
         "jsx": "react",
         "outDir": "built",
-        "rootDir": "src"
+        "rootDir": "src",
+        "moduleResolution": "node"
     },
     "exclude": [
         "node_modules"

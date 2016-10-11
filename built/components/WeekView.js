@@ -24,7 +24,10 @@ export default class WeekView extends React.Component {
             i++; // adjust index to account for ignoring Sunday.
             return (React.createElement(DayView, {tabLabel: day, onPress: this.props.subjectSelectHandler, subjects: routinePropArray[i], key: `tab_${day}`}));
         });
-        return (React.createElement(View, {style: { flex: 1 }}, React.createElement(StatusBar, {backgroundColor: STATUSBAR_COLOR, barStyle: "light-content"}), React.createElement(ToolbarAndroid, {title: "Week View", titleColor: 'white', actions: [{ title: " View" }, { title: "Settings" }], style: stylesheet.toolbar}), React.createElement(ScrollableTabView, {tabBarActiveTextColor: TEXT_COLOR, tabBarInactiveTextColor: TEXT_COLOR, tabBarUnderlineColor: TEXT_COLOR, tabBarBackgroundColor: BACKGROUND_COLOR, prerenderingSiblingsNumber: 1}, tabs)));
+        return (React.createElement(View, {style: { flex: 1 }}, 
+            React.createElement(StatusBar, {backgroundColor: STATUSBAR_COLOR, barStyle: "light-content"}), 
+            React.createElement(ToolbarAndroid, {title: "Week View", titleColor: 'white', actions: [{ title: " View" }, { title: "Settings" }], style: stylesheet.toolbar}), 
+            React.createElement(ScrollableTabView, {tabBarActiveTextColor: TEXT_COLOR, tabBarInactiveTextColor: TEXT_COLOR, tabBarUnderlineColor: TEXT_COLOR, tabBarBackgroundColor: BACKGROUND_COLOR, prerenderingSiblingsNumber: 1}, tabs)));
     }
 }
 const stylesheet = StyleSheet.create({

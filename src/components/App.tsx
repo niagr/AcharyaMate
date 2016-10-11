@@ -11,18 +11,31 @@ import {
     InteractionManager 
 } from "react-native";
 import ScrollableTabView from "react-native-scrollable-tab-view";
+import { createStore } from "redux";
+import { Provider, connect } from "react-redux";
 
 import DayView from './DayView';
-import SubjectView from './SubjectView';
+import { SubjectViewRedux as SubjectView } from './SubjectView';
 import WeekView from './WeekView';
-import CalendarMonthView from './CalendarDayView';
-import {routine, calcAttRecForMonth} from '../mock/data';
-import {subjects, SubjectMap} from '../mock/subjects';
-import {AttendanceRecord, records} from '../mock/attendance-record';
+import { attendance, State } from "../reducers/main";
 
 
+interface SubjectRecord {
+    name: string;
+}
+type SubjectMap = {[subjectCode: string]: SubjectRecord}
 
-export class App extends React.Component<any, any> {
+type WeeklyRoutine = {[dayOfWeek: number]: string[]};
+
+
+interface AppProps extends React.Props<AppBase> {
+    records?: number[][][];
+    subjects?: SubjectMap;
+    routine?: WeeklyRoutine;
+}
+
+
+class AppBase extends React.Component<AppProps, any> {
 
     private interactionHandle = null;
     private _navigator: React.NavigatorStatic;
@@ -62,32 +75,32 @@ export class App extends React.Component<any, any> {
                 return (
                         <WeekView
                             subjectSelectHandler={(subject: string) => this._onPress(navigator, subject)}
-                            subjects={subjects}
-                            routine={routine as any}
+                            subjects={this.props.subjects}
+                            routine={this.props.routine as any}
                         />
                     
                 );
             case 'subject-view':
                 const subject = route.subject;
-                // Attendance record in the form of a 2D array indexed as [month][day]
-                const attRec = [0,1,2,3,4,5].map(month => {
-                    const foo = calcAttRecForMonth(subject, routine as string[][], records[month], month, 2016)
-                    // flatten hourly attendance into daily. 
-                    // Here we take any hour attended as 'attended all hours of that subject in the day'.
-                    const bar = foo.map(day => {
-                        return (
-                            day.indexOf(1) !== -1 ? 1 : 
-                            day.indexOf(0) !== -1 ? 0 : 
-                            -1
-                        );
-                    });
-                    return bar;
-                });
+                // // Attendance record in the form of a 2D array indexed as [month][day]
+                // const attRec = [0,1,2,3,4,5].map(month => {
+                //     const foo = calcAttRecForMonth(subject, routine as string[][], this.props.records[month], month, 2016)
+                //     // flatten hourly attendance into daily. 
+                //     // Here we take any hour attended as 'attended all hours of that subject in the day'.
+                //     const bar = foo.map(day => 
+                //         day.indexOf(1) !== -1 ? 1 : 
+                //         day.indexOf(0) !== -1 ? 0 : 
+                //         -1
+                //     );
+                //     return bar;
+                // });
                 return (
                     <SubjectView
                         showPlaceholderForCostlyElements={!this.state.showAll}
-                        subject={subjects[route.subject].name}
-                        attendanceRecord={attRec}
+                        subject={{
+                            subjectCode: subject,
+                            name: this.props.subjects[subject].name
+                        }}
                     />
                 );
         }
@@ -108,7 +121,7 @@ export class App extends React.Component<any, any> {
             <Navigator
                 initialRoute={this.routes[0]}
                 configureScene={() => Navigator.SceneConfigs.FloatFromBottomAndroid}
-                style={stylesheet.container}
+                sceneStyle={stylesheet.container}
                 renderScene={(route, navigator) => this.navigatorRenderScene(route, navigator)}
                 onDidFocus={(r) => this.onNavigatorDidFocus(r)}
             />
@@ -124,12 +137,26 @@ export class App extends React.Component<any, any> {
         );
     }
 }
+
+const AppBaseRedux = connect(
+    (store: State)  => ({
+        records: store.attRec,
+        subjects: store.subjects,
+        routine: store.routine
+    })
+)(AppBase);
+
+export const App = (props) => (
+    <Provider store={createStore(attendance)}>
+        <AppBaseRedux/>
+    </Provider>
+)
     
 const stylesheet = StyleSheet.create({
     "container": {
         flex: 1,
         alignItems: "stretch",
         // backgroundColor: 'red'
-    }
+    } as any
 });
 

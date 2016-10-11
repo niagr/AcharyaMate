@@ -9,10 +9,16 @@ export default class SubjectTile extends React.Component {
         this.props.onPress();
     }
     render() {
-        return (React.createElement(TouchableNativeFeedback, {ref: 'container', style: [], onPress: this._onPress.bind(this), background: TouchableNativeFeedback.Ripple('#00000033', false), delayPressIn: 0}, React.createElement(View, {style: [
-            stylesheet.container,
-            this.props.backgroundColor && { backgroundColor: this.props.backgroundColor }
-        ]}, React.createElement(Text, {style: stylesheet.title}, this.props.subjectTitle), React.createElement(Text, {style: stylesheet.professorText}, "Prof. ", this.props.professor))));
+        return (React.createElement(TouchableNativeFeedback, {ref: 'container', style: [], onPress: this._onPress.bind(this), background: TouchableNativeFeedback.Ripple('#00000033', false), delayPressIn: 0}, 
+            React.createElement(View, {style: [
+                stylesheet.container,
+                this.props.backgroundColor && { backgroundColor: this.props.backgroundColor }
+            ]}, 
+                React.createElement(Text, {style: stylesheet.title}, this.props.subjectTitle), 
+                React.createElement(Text, {style: stylesheet.professorText}, 
+                    "Prof. ", 
+                    this.props.professor))
+        ));
     }
 }
 const stylesheet = StyleSheet.create({

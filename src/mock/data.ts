@@ -6,7 +6,7 @@ interface SubjectAttendance {
     attended: number;
 }
 
-type AttendanceBySubject = {[subjectCode: string] : SubjectAttendance};
+export type AttendanceBySubject = {[subjectCode: string] : SubjectAttendance};
 
 
 type WeeklyRoutine = {[dayOfWeek: number]: string[]};

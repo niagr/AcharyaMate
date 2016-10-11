@@ -7,12 +7,16 @@ import {
     ListView,
     InteractionManager
 } from "react-native";
+import { connect } from "react-redux";
 // TODO: convert to ES6 module import syntax
 // import Calendar = require('react-native-calendar-android');
 
-import CalendarMonthView, {MonthMap} from './CalendarDayView';
+import {CalendarMonthView, MonthMap} from './CalendarDayView';
 import StaggeredListView from './StaggeredListView';
 import * as Util from '../Util';
+import {calcAttRecForMonth} from '../mock/data';
+import { State } from '../reducers/main';
+import { dateSelected } from "../actions/index";
 
 
 /**
@@ -30,13 +34,17 @@ function getAbsentDates (attRecByMonth: number[][]): number[][] {
 
 interface SubjectViewProps {
     showPlaceholderForCostlyElements: boolean;
-    subject: string;
-    attendanceRecord: number[][]; // [month][day]
+    subject: {
+        subjectCode: string
+        name: string;
+    };
+    attendanceRecord?: number[][]; // [month][day]
+    onDateSelected?: (day, month) => any;
 }
 interface SubjectViewState {
 }
     
-export default class SubjectView extends React.Component<SubjectViewProps, SubjectViewState> {
+class SubjectView extends React.Component<SubjectViewProps, SubjectViewState> {
 
     static months: string[] = [
         'January',
@@ -48,12 +56,13 @@ export default class SubjectView extends React.Component<SubjectViewProps, Subje
     ]
 
     render () {
+        // console.log('attendance record:', this.props.attendanceRecord)
         return (
             <View
                 style={[stylesheet['subject-view-container']]}
             >
                 <View style={stylesheet.headerContainer} >
-                    <Text style={stylesheet.headerText} >{this.props.subject}</Text>
+                    <Text style={stylesheet.headerText} >{this.props.subject.name}</Text>
                 </View>
                 {!this.props.showPlaceholderForCostlyElements &&
                     
@@ -64,10 +73,12 @@ export default class SubjectView extends React.Component<SubjectViewProps, Subje
                                 <CalendarMonthView
                                     month={month}
                                     year={2016}
-                                    initialActiveDays={
+                                    activeDays={
                                         this.props.attendanceRecord[month].map((day, d) => day === 0 ? d : null).filter(d => d !== null)
                                     }
+                                    disabledDays={this.props.attendanceRecord[month].map((day, d) => day === -1 ? d : null).filter(d => d !== null)}
                                     activeDayColor={undefined}
+                                    onDateSelected={day => this.props.onDateSelected(day, month)}
                                 />
                             </View>
                         )}
@@ -78,12 +89,37 @@ export default class SubjectView extends React.Component<SubjectViewProps, Subje
         )
     }
 }
+
+export const SubjectViewRedux = connect(
+    (state: State, ownProps: SubjectViewProps) => {
+        console.log("mapStateToProps called");
+        return {
+            attendanceRecord: 
+                [0,1,2,3,4,5].map(month => {
+                    const foo = calcAttRecForMonth(ownProps.subject.subjectCode, state.routine as string[][], state.attRec[month], month, 2016)
+                    // flatten hourly attendance into daily. 
+                    // Here we take any hour attended as 'attended all hours of that subject in the day'.
+                    const bar = foo.map(day => 
+                        day.indexOf(1) !== -1 ? 1 : 
+                        day.indexOf(0) !== -1 ? 0 : 
+                        -1
+                    );
+                    return bar;
+                })
+        }
+    },
+    (dispatch, ownProps: SubjectViewProps) => ({
+        onDateSelected: (day, month) => dispatch(dateSelected(ownProps.subject.subjectCode, day, month))
+    })
+)(SubjectView);
+
+
 const stylesheet = StyleSheet.create({
     "subject-view-container": {
         flex: 1,
         backgroundColor: "white",
         alignItems: "stretch"
-    },
+    } as any,
     'calenderContainer': {
         paddingVertical: 20
     },
@@ -93,10 +129,10 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'space-around',
         borderWidth: 1,
         borderColor: '#dddddd'
-    },
+    } as any,
     'headerText': {
         textAlign: 'center',
         fontSize: 24,
         // fontWeight: 'bold'
-    }
+    } as any
 });

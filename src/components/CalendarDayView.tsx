@@ -1,20 +1,23 @@
 import * as React from "react";
 import { 
-    Text, 
-    View, 
+    Text, TextStyle,
+    View, ViewStyle,
     StyleSheet
 } from "react-native";
 
-interface CalendarMonthViewProps extends React.Props<CalendarMonthView> {
+interface CalendarMonthViewProps extends React.Props<{}> {
     year: number;
     month: number;
     activeDayColor?: string;
-    initialActiveDays?: number[]; // 0-based days
+    disabledDayColor?: string;
+    activeDays?: number[]; // 0-based days
+    disabledDays?: number[]
     onDateSelected?: (day: number) => any;
+    showOtherMonthsDays?: boolean;
 }
-interface CalendarMonthViewState {
-    userSelectedActiveDays: number[];
-} 
+// interface CalendarMonthViewState {
+//     userSelectedActiveDays: number[];
+// } 
 
 type Month = 'January'|'February';
 
@@ -22,39 +25,21 @@ export type MonthMap = {[name:string]: number};
 
 const WeekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export default class CalendarMonthView extends React.Component<CalendarMonthViewProps, CalendarMonthViewState> {
-
-    constructor (props) {
-        super(props);
-        this.state = {
-            userSelectedActiveDays: props.initialActiveDays || []
-        };
-    }
-
-    _onDateSelected (day: number) {
-        const oldActiveDays = this.state.userSelectedActiveDays;
-        let i;
-        this.setState({
-            userSelectedActiveDays: (i = oldActiveDays.indexOf(day)) === -1 ? 
-                            oldActiveDays.concat(day) : 
-                            oldActiveDays.slice(0, i).concat(oldActiveDays.slice(i+1))
-        })
-        this.props.onDateSelected && this.props.onDateSelected(day);
-    }
-
-    render () {
+export const CalendarMonthView = (props: CalendarMonthViewProps) => {
         
-        const NUM_DAYS = new Date(this.props.year, this.props.month + 1, 0).getDate();
-        const NUM_DAYS_IN_LAST_MONTH = new Date(this.props.year, this.props.month, 0).getDate();
-        const STARTING_DAY = new Date(this.props.year, this.props.month, 1).getDay();
+        const NUM_DAYS = new Date(props.year, props.month + 1, 0).getDate();
+        const NUM_DAYS_IN_LAST_MONTH = new Date(props.year, props.month, 0).getDate();
+        const STARTING_DAY = new Date(props.year, props.month, 1).getDay();
         const dayList: number[] = Array(42); // holds the numbers that are shown on the calendar in order (0-indexed)
 
-        // const activeDays = this.props.activeDays.concat(this.state.userSelectedActiveDays);
-        const activeDays = (this.state.userSelectedActiveDays);
+        // const activeDays = props.activeDays.concat(this.state.userSelectedActiveDays);
+        const activeDays = props.activeDays;
+        
+        const showOtherMonthsDays = props.showOtherMonthsDays || false;
         
         // fill last month's days
         for (let i = STARTING_DAY - 1, k = 0; i >= 0; i--, k++) {
-            dayList[i] = NUM_DAYS_IN_LAST_MONTH - k;
+            dayList[i] = showOtherMonthsDays ? NUM_DAYS_IN_LAST_MONTH - k : -1;
         }
         
         // fill this month's days
@@ -68,19 +53,24 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
         }
 
         const daysTextNodes = dayList.map((day, i) => {
+            let dayText = day.toString();
             let color = 'grey';
             let onPress = null;
             let backgroundColor;
             if (i < STARTING_DAY || i >= STARTING_DAY + NUM_DAYS) {
                 color = '#cccccc';
+                if (!showOtherMonthsDays)
+                    dayText = ' ';
             } else {
                 if (activeDays.indexOf(day-1) !== -1) {
                     color = 'white';
-                    backgroundColor = this.props.activeDayColor || 'red';
+                    backgroundColor = props.activeDayColor || 'red';
+                } else if (props.disabledDays.indexOf(day-1) !== -1) {
+                    color = '#cccccc';
                 }
-                onPress = () => this._onDateSelected(day - 1);
+                onPress = () => props.onDateSelected(day - 1);
             }
-            return <Text key={i} style={[stylesheet.dayText, {color, backgroundColor}]} onPress={onPress} >{day}</Text>
+            return <Text key={i} style={[stylesheet.dayText, {color, backgroundColor}]} onPress={onPress} >{dayText}</Text>
         });
 
         const columns = [0,1,2,3,4,5,6].map(i => [0,1,2,3,4,5].map(n => daysTextNodes[(n*7) + i]));
@@ -91,39 +81,44 @@ export default class CalendarMonthView extends React.Component<CalendarMonthView
         // let rows: any[] = [0,1,2,3,4,5].map(i => daysTextNodes.slice(i*7, (i+1)*7)) // split array up into smaller arrays for each week
         // rows = rows.map((rowDays, i) => <View key={i} style={stylesheet.rowContainer}>{rowDays}</View>);
         // return <View style={stylesheet.mainContainer}>{rows}</View>;
-    }
+    
 }
 
-const stylesheet = StyleSheet.create({
+interface CalendarMonthViewStyle {
+    rowContainer: ViewStyle;
+    columnContainer: ViewStyle;
+    mainContainer: ViewStyle;
+    dayTextContainer: ViewStyle;
+    dayText: TextStyle;
+}
+
+const stylesheet: CalendarMonthViewStyle = StyleSheet.create({
     'rowContainer': {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
+        flexDirection: 'row' as 'row',
+        justifyContent: 'space-around' as 'space-around',
         height: 40        
     },
     'columnContainer': {
-        flexDirection: 'column',
-        justifyContent: 'space-around',
+        flexDirection: 'column' as 'column',
+        justifyContent: 'space-around' as 'space-around',
 
     },
     'mainContainer': {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'stretch',
+        flexDirection: 'row' as 'row',
+        justifyContent: 'space-around' as 'space-around',
+        alignItems: 'stretch' as 'stretch',
         height: 250,
     },
     'dayTextContainer': {
         width: 20,
         height: 20,
-        alignItems: 'center'
+        alignItems: 'center' as 'center'
     },
     'dayText': {
         height: 30,
         width: 30,
-        textAlign: 'center',
-        textAlignVertical: 'center',
+        textAlign: 'center' as 'center',
+        textAlignVertical: 'center' as 'center',
         borderRadius: 30
-    },
-    'otherMonthsDay': {
-        color: 'grey'
     }
 });

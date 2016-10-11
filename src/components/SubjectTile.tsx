@@ -65,7 +65,7 @@ const stylesheet = StyleSheet.create({
         textAlign: 'center',
         fontSize: 30,
         color: 'grey'
-    },
+    } as any,
     professorText: {
         fontSize: 15,
         color: 'grey'

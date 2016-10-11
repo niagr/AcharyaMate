@@ -15,6 +15,7 @@ interface Subject {
 interface DayViewProps {
     onPress?: (...args: any[]) => any;
     subjects: Subject[];
+    tabLabel?: string
 }
 
 export default class DayView extends React.Component<DayViewProps, any> {
