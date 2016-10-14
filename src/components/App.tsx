@@ -125,15 +125,6 @@ class AppBase extends React.Component<AppProps, any> {
                 renderScene={(route, navigator) => this.navigatorRenderScene(route, navigator)}
                 onDidFocus={(r) => this.onNavigatorDidFocus(r)}
             />
-
-            // <WeekView
-            //     subjectSelectHandler={() => void 0}
-            //     subjects={subjects}
-            //     routine={routine as any}
-            // />
-
-            // <View><Text>Hellooooooooo</Text></View>
-
         );
     }
 }

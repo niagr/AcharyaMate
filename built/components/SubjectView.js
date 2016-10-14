@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { CalendarMonthView } from './CalendarDayView';
 import StaggeredListView from './StaggeredListView';
 import { calcAttRecForMonth } from '../mock/data';
-import { dateSelected } from "../actions/index";
+import { dateSelected } from "../actions";
 /**
  * Gets the absent days from daily attendance for the month
  *

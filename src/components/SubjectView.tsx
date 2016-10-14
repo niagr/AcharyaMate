@@ -11,12 +11,12 @@ import { connect } from "react-redux";
 // TODO: convert to ES6 module import syntax
 // import Calendar = require('react-native-calendar-android');
 
-import {CalendarMonthView, MonthMap} from './CalendarDayView';
+import {CalendarMonthView} from './CalendarDayView';
 import StaggeredListView from './StaggeredListView';
 import * as Util from '../Util';
 import {calcAttRecForMonth} from '../mock/data';
 import { State } from '../reducers/main';
-import { dateSelected } from "../actions/index";
+import { dateSelected } from "../actions";
 
 
 /**

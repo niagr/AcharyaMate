@@ -15,13 +15,6 @@ interface CalendarMonthViewProps extends React.Props<{}> {
     onDateSelected?: (day: number) => any;
     showOtherMonthsDays?: boolean;
 }
-// interface CalendarMonthViewState {
-//     userSelectedActiveDays: number[];
-// } 
-
-type Month = 'January'|'February';
-
-export type MonthMap = {[name:string]: number};
 
 const WeekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
